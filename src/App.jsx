@@ -1,6 +1,6 @@
+import { Fragment, useState } from "react";
 import { Footer, Header, Secao, FiltroSecao } from "@components";
 import produtos from "@services/produtos.json";
-import { Fragment } from "react";
 import styles from "./App.module.css";
 
 const subSecoesEntradas = new Set(produtos.entradas.map((p) => p.subSecao));
@@ -21,15 +21,26 @@ const secoes = [
 ];
 
 function App() {
-  console.log(subSecoesEntradas, subSecoesPrincipais);
-  const handleSelecionarSecao = (titulo) => {};
+  const [filtro, setFiltro] = useState(null);
+
+  const handleSelecionarSecao = (titulo) => {
+    if (filtro === titulo) {
+      setFiltro(null);
+    } else {
+      setFiltro(titulo);
+    }
+  };
+
+  const secoesFiltradas = filtro
+    ? secoes.filter((secao) => secao.nome === filtro)
+    : secoes;
 
   return (
     <div className={styles.app}>
       <Header />
       <FiltroSecao secoes={secoes} onSelecionarSecao={handleSelecionarSecao} />
       <main className={styles.main}>
-        {secoes.map((secao) => {
+        {secoesFiltradas.map((secao) => {
           return (
             <Fragment key={secao.nome}>
               <Secao
@@ -51,8 +62,6 @@ function App() {
           produtos={produtos.principais}
           subSecoes={Array.from(subSecoesPrincipais)}
         /> */}
-
-        <Secao nome="Sobremesas" produtos={produtos.sobremesas} />
       </main>
       <Footer />
     </div>
